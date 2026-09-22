@@ -5,6 +5,9 @@ process.env.NODE_ENV='test';
 const vite=await createServer({server:{middlewareMode:true},appType:'custom'});
 const pg=newDb().adapters.createPg(),pool=new pg.Pool();
 try{
+ const {readApiResponse}=await vite.ssrLoadModule('/app/api-response.ts');
+ await assert.rejects(()=>readApiResponse(new Response('A server error has occurred',{status:500})),/studio server is temporarily unavailable/);
+ await assert.rejects(()=>readApiResponse(Response.json({error:'Incorrect username or password.'},{status:401})),/Incorrect username or password/);
  const {setTestDatabase}=await vite.ssrLoadModule('/app/database.ts');setTestDatabase((sql,values)=>pool.query(sql,values));
  const {passwordHash}=await vite.ssrLoadModule('/app/server.ts');process.env.ADMIN_USERNAME='test-admin';process.env.ADMIN_PASSWORD_HASH=await passwordHash('integration-test-password');
  const {GET}=await vite.ssrLoadModule('/app/api/route.ts');let cookie='';

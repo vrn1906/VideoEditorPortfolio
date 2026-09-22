@@ -1,7 +1,7 @@
-import {youtubeKey,officialYoutubeViews} from './youtube-statistics';
-import {database,seed} from './server';
-import type {Video} from './seed';
-import verifiedViews from './verified-views.json';
+import {youtubeKey,officialYoutubeViews} from './youtube-statistics.js';
+import {database,seed} from './server.js';
+import type {Video} from './seed.js';
+import verifiedViews from './verified-views.json' with {type:'json'};
 export function jsonObjectAt(text:string,start:number):unknown {
  if(start<0||text[start]!=='{')return null;let depth=0,inString=false,escaped=false;
  for(let i=start;i<text.length;i++){const c=text[i];if(inString){if(escaped)escaped=false;else if(c==='\\')escaped=true;else if(c==='"')inString=false;}else if(c==='"')inString=true;else if(c==='{')depth++;else if(c==='}'&&--depth===0){try{return JSON.parse(text.slice(start,i+1))}catch{return null}}}return null;

@@ -1,4 +1,4 @@
-import {database,UserError} from './server';
+import {database,UserError} from './server.js';
 export async function youtubeKey(){const row=await database().prepare("SELECT value FROM settings WHERE key='youtube-api-key'").first<{value:string}>();return row?.value||process.env.YOUTUBE_API_KEY||'';}
 export async function officialYoutubeViews(id:string,key:string):Promise<number|null>{
  const response=await fetch('https://www.googleapis.com/youtube/v3/videos?part=statistics&id='+encodeURIComponent(id),{headers:{'X-Goog-Api-Key':key},signal:AbortSignal.timeout(10000)});

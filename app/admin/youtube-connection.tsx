@@ -1,11 +1,12 @@
+import {readApiResponse} from '../api-response.js';
 'use client';
 import {useEffect,useState,type FormEvent} from 'react';
 export default function YoutubeConnection({onUpdated}:{onUpdated:()=>Promise<void>}){
  const [connected,setConnected]=useState<boolean|null>(null),[key,setKey]=useState(''),[busy,setBusy]=useState(false),[message,setMessage]=useState('');
- useEffect(()=>{fetch('/api/youtube-connection').then(async r=>{if(!r.ok)throw Error();const d=await r.json() as {connected:boolean};setConnected(d.connected)}).catch(()=>setMessage('Could not check the YouTube connection. Reload to retry.'))},[]);
+ useEffect(()=>{fetch('/api/youtube-connection').then(async r=>{if(!r.ok)throw Error();const d=await readApiResponse(r) as {connected:boolean};setConnected(d.connected)}).catch(()=>setMessage('Could not check the YouTube connection. Reload to retry.'))},[]);
  async function connect(e:FormEvent){e.preventDefault();setBusy(true);setMessage('Connecting and fetching your video counts…');try{
  const r=await fetch('/api/youtube-connection',{method:'POST',headers:{'Content-Type':'application/json','x-studio-request':'1'},body:JSON.stringify({key})});
- const d=await r.json() as {error?:string;warning?:string;stats?:{counted:number;videoCount:number}};if(!r.ok)throw Error(d.error||'Connection failed. Please try again.');
+ const d=await readApiResponse(r) as {error?:string;warning?:string;stats?:{counted:number;videoCount:number}};if(!r.ok)throw Error(d.error||'Connection failed. Please try again.');
  setConnected(true);setKey('');if(typeof BroadcastChannel!=='undefined'){const c=new BroadcastChannel('portfolio-updates');c.postMessage('published');c.close()}
  await onUpdated();setMessage(d.warning||`Connected. Counts available for ${d.stats?.counted??0} of ${d.stats?.videoCount??0} videos.`);
  }catch(e){setMessage(e instanceof Error?e.message:'Please try again.')}finally{setBusy(false)}}

@@ -1,9 +1,9 @@
-import {youtubeKey,officialYoutubeViews} from '../youtube-statistics';
-import {authorized,content,cookie,credentials,database,digest,imageUrl,passwordHash,profileUrl,random,runtime,sameOrigin,seed,sessionToken,UserError,verifyPassword} from '../server';
-import {fetchProfile,importVideo,parseVideo} from '../import-video';
-import type {Video} from '../seed';
-import {resolveBrand} from '../brand-service';
-import {refreshViews,refreshVideoViews} from '../view-counts';
+import {youtubeKey,officialYoutubeViews} from '../youtube-statistics.js';
+import {authorized,content,cookie,credentials,database,digest,imageUrl,passwordHash,profileUrl,random,runtime,sameOrigin,seed,sessionToken,UserError,verifyPassword} from '../server.js';
+import {fetchProfile,importVideo,parseVideo} from '../import-video.js';
+import type {Video} from '../seed.js';
+import {resolveBrand} from '../brand-service.js';
+import {refreshViews,refreshVideoViews} from '../view-counts.js';
 export const dynamic='force-dynamic';
 const json=(body:unknown,status=200,headers:Record<string,string>={})=>Response.json(body,{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff',...headers}});
 async function body(req:Request){const text=await req.text();if(text.length>24000)throw new UserError('This entry is too large.',413);try{return JSON.parse(text)}catch{throw new UserError('Invalid request.')}}

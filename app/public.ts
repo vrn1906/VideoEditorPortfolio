@@ -1,5 +1,5 @@
-import {initialVideos,initialSettings,type Video} from './seed';
-import {knownBrand} from './brand-catalog';
+import {initialVideos,initialSettings,type Video} from './seed.js';
+import {knownBrand} from './brand-catalog.js';
 let videos=initialVideos,settings=initialSettings,format='All',client='',style='',revision=0;
 const $=(id:string)=>document.getElementById(id)!;
 const el=<K extends keyof HTMLElementTagNameMap>(tag:K,className='',text='')=>{const n=document.createElement(tag);n.className=className;n.textContent=text;return n};

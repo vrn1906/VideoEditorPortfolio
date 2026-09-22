@@ -1,11 +1,12 @@
+import {readApiResponse} from '../api-response.js';
 'use client';
 import {useEffect,useState,type FormEvent} from 'react';
 import {ArrowUpRight,LogOut,LockKeyhole,Plus,Trash2,Pencil,Download,Upload} from 'lucide-react';
-import {initialSettings,type Video} from '../seed';
-import IntegrationFields from './integration-fields';
-import BrandLogo from '../brand-logo';
-import YoutubeConnection from './youtube-connection';
-async function api(path:string,method='GET',data?:unknown){const r=await fetch('/api/'+path,{method,headers:{'x-studio-request':'1',...(data instanceof FormData?{}:{'Content-Type':'application/json'})},body:data?data instanceof FormData?data:JSON.stringify(data):undefined});const result=await r.json() as {viewsRefreshed?:boolean;error?:string;authenticated:boolean;videos:Video[];settings:typeof initialSettings;video:Video;warnings:string[];url:string;clientName:string;clientUrl:string;clientImage:string;logo:string;warning?:string;stats:{total:number;counted:number;videoCount:number}};if(!r.ok)throw new Error(result.error||'Something went wrong. Please try again.');return result}
+import {initialSettings,type Video} from '../seed.js';
+import IntegrationFields from './integration-fields.js';
+import BrandLogo from '../brand-logo.js';
+import YoutubeConnection from './youtube-connection.js';
+async function api(path:string,method='GET',data?:unknown){const r=await fetch('/api/'+path,{method,headers:{'x-studio-request':'1',...(data instanceof FormData?{}:{'Content-Type':'application/json'})},body:data?data instanceof FormData?data:JSON.stringify(data):undefined});const result=await readApiResponse(r) as {viewsRefreshed?:boolean;error?:string;authenticated:boolean;videos:Video[];settings:typeof initialSettings;video:Video;warnings:string[];url:string;clientName:string;clientUrl:string;clientImage:string;logo:string;warning?:string;stats:{total:number;counted:number;videoCount:number}};if(!r.ok)throw new Error(result.error||'Something went wrong. Please try again.');return result}
 export default function Admin(){const [auth,setAuth]=useState<boolean|null>(null),[videos,setVideos]=useState<Video[]>([]),[settings,setSettings]=useState(initialSettings),[tab,setTab]=useState('Work'),[url,setUrl]=useState(''),[draft,setDraft]=useState<Video|null>(null),[editing,setEditing]=useState(false),[busy,setBusy]=useState(false),[message,setMessage]=useState(''),[isError,setIsError]=useState(false),[warnings,setWarnings]=useState<string[]>([]),[brand,setBrand]=useState('');
  const notice=(s:string,error=false)=>{setMessage(s);setIsError(error)};
  async function refresh(){const d=await api('content');setVideos(d.videos);setSettings(d.settings)}

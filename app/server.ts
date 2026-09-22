@@ -1,6 +1,6 @@
-import {db,media} from './database';
-import {initialVideos,initialSettings} from './seed';
-import {withViews} from './view-counts';
+import {db,media} from './database.js';
+import {initialVideos,initialSettings} from './seed.js';
+import {withViews} from './view-counts.js';
 export const runtime=()=>({DB:db,BUCKET:media,ADMIN_USERNAME:process.env.ADMIN_USERNAME,ADMIN_PASSWORD_HASH:process.env.ADMIN_PASSWORD_HASH,INSTAGRAM_ACCESS_TOKEN:process.env.INSTAGRAM_ACCESS_TOKEN});
 export function database(){const db=runtime().DB;if(!db)throw new Error('Storage is unavailable. Please try again shortly.');return db}
 export async function seed(){const db=database();if(await db.prepare("SELECT key FROM settings WHERE key='initialized'").first())return;await db.batch([...initialVideos.map((v,i)=>db.prepare("INSERT INTO videos (id,data,created) SELECT ?,?,CAST(? AS BIGINT) WHERE NOT EXISTS (SELECT 1 FROM settings WHERE key='initialized') ON CONFLICT(id) DO NOTHING").bind(v.id,JSON.stringify(v),Date.now()-i)),db.prepare("INSERT INTO settings (key,value) VALUES ('public',?) ON CONFLICT(key) DO NOTHING").bind(JSON.stringify(initialSettings)),db.prepare("INSERT INTO settings (key,value) VALUES ('initialized','1') ON CONFLICT(key) DO NOTHING")]);}

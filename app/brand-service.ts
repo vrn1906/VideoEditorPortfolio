@@ -1,5 +1,5 @@
-import {knownBrand,brandKey} from './brand-catalog';
-import {UserError} from './server';
+import {knownBrand,brandKey} from './brand-catalog.js';
+import {UserError} from './server.js';
 async function data(url:string){const r=await fetch(url,{redirect:'manual',signal:AbortSignal.timeout(9000),headers:{'User-Agent':'VarunPortfolio/1.0 (brand logo lookup)'}});if(!r.ok)throw Error('Lookup unavailable');return await r.json() as Record<string,any>}
 export async function resolveBrand(name:string,website=''){
  if(typeof name!=='string'||!name.trim()||name.length>100)throw new UserError('Enter the brand name.');
