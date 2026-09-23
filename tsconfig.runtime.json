@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "rootDir": ".",
+    "outDir": ".runtime-check",
+    "noEmit": false,
+    "allowImportingTsExtensions": false
+  },
+  "include": ["api/studio.ts"]
+}
