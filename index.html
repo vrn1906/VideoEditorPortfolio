@@ -255,6 +255,13 @@
   // ─── DATA ─────────────────────────────────────────────────────
   const testimonialsData = [
     {
+      text: "Loved your edits, man! The first draft was a banger, and it took just two revisions.",
+      name: "Kevin Zingkhai",
+      role: "Client",
+      initials: "KZ",
+      rated: false
+    },
+    {
       text: "Most editors cut clips. Varun builds content that keeps people watching. That difference is exactly why creators grow. Absolute legend.",
       name: "Tanmay Bhat",
       role: "YouTube Creator · 5.3M Subs",
@@ -289,11 +296,11 @@
       card.style.transitionDelay = (i * 0.15) + 's';
       card.innerHTML = `
         <div class="quote-mark">"</div>
-        <div class="stars">${'<span>★</span>'.repeat(5)}</div>
+        ${t.rated === false ? '' : `<div class="stars">${'<span>★</span>'.repeat(5)}</div>`}
         <p class="testimonial-text">"${t.text}"</p>
         <div class="testimonial-author">
           <div class="author-avatar">
-  <img src="${t.avatar}" alt="${t.name}" />
+  ${t.avatar ? `<img src="${t.avatar}" alt="${t.name}" />` : `<span aria-hidden="true">${t.initials}</span>`}
 </div>
           <div>
             <div class="author-name">${t.name}</div>
